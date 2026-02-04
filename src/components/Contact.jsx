@@ -60,6 +60,14 @@ const Contact = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    // simple validation: prevent sending if any field is empty
+    const { name, email, message } = form;
+    if (!name.trim() || !email.trim() || !message.trim()) {
+      showToast('Please fill in all fields before sending.', 'error');
+      return;
+    }
+
     setLoading(true);
 
     emailjs.send(
@@ -136,8 +144,11 @@ const Contact = () => {
                 text-white rounded-lg outline-none border-none font-medium' />
             </label>
 
-            <button type='submit' className='bg-tertiary py-3 px-8 rounded-xl outline-none
-            w-fit text-white font-bold shadow-md shadow-primary'>
+            <button
+              type='submit'
+              disabled={loading}
+              className={`bg-tertiary py-3 px-8 rounded-xl outline-none w-fit text-white font-bold shadow-md shadow-primary ${loading ? 'opacity-50 cursor-not-allowed' : ''}`}
+            >
               {loading ? 'Sending...' : 'Send'}
             </button>
           </form>
