@@ -5,14 +5,33 @@ import emailjs from '@emailjs/browser'
 import { styles } from '../styles'
 import { EarthCanvas } from './canvas'
 import { SectionWrapper } from '../hoc'
-import { slideIn } from '../utils/motion'
-import { form } from 'framer-motion/client'
+import { slideIn } from '../utils/motion' 
 
 // template_bn62tab
 // service_bvaisf5
 // 3Gc2EPyCLKk1iKXvs
 
-const Contact = () => {
+// Simple toast component using Framer Motion
+const Toast = ({ show, type, message, onClose }) => (
+  <motion.div
+    initial={{ opacity: 0, y: 20, scale: 0.98 }}
+    animate={ show ? { opacity: 1, y: 0, scale: 1 } : { opacity: 0, y: 20, scale: 0.98 } }
+    transition={{ duration: 0.28 }}
+    className={`fixed right-5 bottom-5 z-50 w-[320px] max-w-full rounded-lg p-4 shadow-lg text-white ${type === 'success' ? 'bg-emerald-500' : 'bg-red-500'}`}
+    role="status"
+    aria-live="polite"
+  >
+    <div className="flex items-start gap-3">
+      <div className="flex-1">
+        <p className="font-semibold">{ type === 'success' ? 'Success' : 'Error' }</p>
+        <p className="text-sm leading-tight">{message}</p>
+      </div>
+      <button onClick={onClose} className="ml-3 text-xl leading-none">✕</button>
+    </div>
+  </motion.div>
+)
+
+const Contact = () => { 
 
   const formRef = useRef()
 
@@ -24,6 +43,15 @@ const Contact = () => {
 
 
   const [loading, setLoading] = useState(false)
+
+  // toast state for animated alerts
+  const [toast, setToast] = useState({ show: false, message: '', type: 'success' })
+
+  const showToast = (message, type = 'success') => {
+    setToast({ show: true, message, type })
+    // auto hide after 4s
+    setTimeout(() => setToast(t => ({ ...t, show: false })), 4000)
+  }
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -47,7 +75,7 @@ const Contact = () => {
       '3Gc2EPyCLKk1iKXvs' //public key
     ).then(() => {
       setLoading(false);
-      alert('Thank you. I will get back to you as soon as possible.');
+      showToast('Thank you. I will get back to you as soon as possible.', 'success');
 
       setForm({
         name: '',
@@ -58,72 +86,75 @@ const Contact = () => {
     }, (error) => {
       setLoading(false);
       console.error(error);
-      alert('Something went wrong. Please try again later.');
+      showToast('Something went wrong. Please try again later.', 'error');
     });
   }
 
   return (
-    <div className='xl:mt-12 xl:flex-row flex-col-reverse flex gap-10 overflow-hidden'>
-      <motion.div
-        variants={slideIn('left', 'tween', 0.2, 1)} //side delay duration
-        className='flex-[0.75] bg-black-100 p-8 rounded-2xl'
-      >
+    <>
+      <div className='xl:mt-12 xl:flex-row flex-col-reverse flex gap-10 overflow-hidden'>
+        <motion.div
+          variants={slideIn('left', 'tween', 0.2, 1)} //side delay duration
+          className='flex-[0.75] bg-black-100 p-8 rounded-2xl'
+        >
 
-        <p className={styles.sectionSubText}>Get in touch</p>
-        <h3 className={styles.sectionHeadText}>Contact.</h3>
+          <p className={styles.sectionSubText}>Get in touch</p>
+          <h3 className={styles.sectionHeadText}>Contact.</h3>
 
-        <form ref={formRef} onSubmit={handleSubmit} className='mt-12 flex flex-col gap-8'>
-          <label className='flex flex-col'>
-            <span className='text-white font-medium mb-4'>Your Name</span>
-            <input type="text"
-              name="name"
-              value={form.name}
-              onChange={handleChange}
-              placeholder='What is your name?'
-              className='bg-tertiary py-4 px-6 placeholder:text-secondary
-              text-white rounded-lg outline-none border-none font-medium' />
-          </label>
+          <form ref={formRef} onSubmit={handleSubmit} className='mt-12 flex flex-col gap-8'>
+            <label className='flex flex-col'>
+              <span className='text-white font-medium mb-4'>Your Name</span>
+              <input type="text"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                placeholder='What is your name?'
+                className='bg-tertiary py-4 px-6 placeholder:text-secondary
+                text-white rounded-lg outline-none border-none font-medium' />
+            </label>
 
-          <label className='flex flex-col'>
-            <span className='text-white font-medium mb-4'>Your Email</span>
-            <input type="email"
-              name="email"
-              value={form.email}
-              onChange={handleChange}
-              placeholder='What is your email?'
-              className='bg-tertiary py-4 px-6 placeholder:text-secondary
-              text-white rounded-lg outline-none border-none font-medium' />
-          </label>
+            <label className='flex flex-col'>
+              <span className='text-white font-medium mb-4'>Your Email</span>
+              <input type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                placeholder='What is your email?'
+                className='bg-tertiary py-4 px-6 placeholder:text-secondary
+                text-white rounded-lg outline-none border-none font-medium' />
+            </label>
 
-          <label className='flex flex-col'>
-            <span className='text-white font-medium mb-4'>Your Message</span>
-            <textarea
-              rows={7}
-              type="text"
-              name="message"
-              value={form.message}
-              onChange={handleChange}
-              placeholder='What is your message?'
-              className='bg-tertiary py-4 px-6 placeholder:text-secondary
-              text-white rounded-lg outline-none border-none font-medium' />
-          </label>
+            <label className='flex flex-col'>
+              <span className='text-white font-medium mb-4'>Your Message</span>
+              <textarea
+                rows={7}
+                name="message"
+                value={form.message}
+                onChange={handleChange}
+                placeholder='What is your message?'
+                className='bg-tertiary py-4 px-6 placeholder:text-secondary
+                text-white rounded-lg outline-none border-none font-medium' />
+            </label>
 
-          <button type='submit' className='bg-tertiary py-3 px-8 rounded-xl outline-none
-          w-fit text-white font-bold shadow-md shadow-primary'>
-            {loading ? 'Sending...' : 'Send'}
-          </button>
-        </form>
+            <button type='submit' className='bg-tertiary py-3 px-8 rounded-xl outline-none
+            w-fit text-white font-bold shadow-md shadow-primary'>
+              {loading ? 'Sending...' : 'Send'}
+            </button>
+          </form>
 
-      </motion.div>
+        </motion.div>
 
-      <motion.div
-        variants={slideIn('right', 'tween', 0.2, 1)} //side delay duration
-        className='xl:flex-1 xl:h-auto md:h-[550px] h-[350px]'
-      >
+        <motion.div
+          variants={slideIn('right', 'tween', 0.2, 1)} //side delay duration
+          className='xl:flex-1 xl:h-auto md:h-[550px] h-[350px]'
+        >
 
-        <EarthCanvas />
-      </motion.div>
-    </div>
+          <EarthCanvas />
+        </motion.div>
+      </div>
+
+      <Toast show={toast.show} type={toast.type} message={toast.message} onClose={() => setToast(t => ({ ...t, show: false }))} />
+    </>
   )
 }
 
