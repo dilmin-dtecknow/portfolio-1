@@ -30,10 +30,14 @@ import carrent from "./carrent.png";
 import jobit from "./jobit.png";
 import tripguide from "./tripguide.png";
 import logo1 from "./logo1.png";
+import edu_bcu from "./edu_bcu.svg";
+import edu_loyola from "./edu_loyola.svg";
 
 export {
   logo,
   logo1,
+  edu_bcu,
+  edu_loyola,
   backend,
   creator,
   mobile,

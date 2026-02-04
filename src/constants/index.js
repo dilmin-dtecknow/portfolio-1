@@ -1,4 +1,8 @@
 import {
+  logo,
+  logo1,
+  edu_bcu,
+  edu_loyola,
   mobile,
   backend,
   creator,
@@ -113,6 +117,31 @@ const technologies = [
     icon: docker,
   },
 ];
+
+const education = [
+  {
+    degree: "G.C.E Advanced Level Examination (Commerce Stream)",
+    institution: "Loyola College Negombo",
+    year: "2019 - 2021",
+    logo: edu_loyola,
+    details: [
+      "Accounting — C",
+      "Business Studies — C",
+      "Economics — C",
+    ],
+  },
+
+  {
+    degree: "BSc (Hons) in Software Engineering",
+    institution: "Birmingham City University (UK)",
+    year: "2021 - Present",
+    logo: edu_bcu,
+    details: [
+      "Specialized in Software Engineering",
+    ],
+  }
+
+]
 
 const experiences = [
   {
@@ -262,4 +291,4 @@ const projects = [
   },
 ];
 
-export { services, technologies, experiences, testimonials, projects };
+export { services, technologies, experiences, testimonials, projects, education };
