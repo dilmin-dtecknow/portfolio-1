@@ -38,6 +38,7 @@ const Contact = () => {
   const [form, setForm] = useState({
   name: '',
   email: '',
+  phone: '',
   message: '',
 })
 
@@ -62,8 +63,8 @@ const Contact = () => {
     e.preventDefault();
 
     // simple validation: prevent sending if any field is empty
-    const { name, email, message } = form;
-    if (!name.trim() || !email.trim() || !message.trim()) {
+    const { name, email, phone, message } = form;
+    if (!name.trim() || !email.trim() || !phone.trim() || !message.trim()) {
       showToast('Please fill in all fields before sending.', 'error');
       return;
     }
@@ -77,6 +78,7 @@ const Contact = () => {
         from_name: form.name,
         to_name: 'Dilmin',
         from_email: form.email,
+        from_phone: form.phone,
         to_email: 'fpasifernando@gmail.com',
         message: form.message,
       },
@@ -128,6 +130,19 @@ const Contact = () => {
                 value={form.email}
                 onChange={handleChange}
                 placeholder='What is your email?'
+                className='bg-tertiary py-4 px-6 placeholder:text-secondary
+                text-white rounded-lg outline-none border-none font-medium' />
+            </label>
+
+            <label className='flex flex-col'>
+              <span className='text-white font-medium mb-4'>Contact Number</span>
+              <input
+                type="tel"
+                name="phone"
+                value={form.phone}
+                onChange={handleChange}
+                placeholder='What is your contact number?'
+                inputMode='tel'
                 className='bg-tertiary py-4 px-6 placeholder:text-secondary
                 text-white rounded-lg outline-none border-none font-medium' />
             </label>
